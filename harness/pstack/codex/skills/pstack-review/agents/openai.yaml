@@ -1,0 +1,5 @@
+interface:
+  display_name: "pstack 独立审查"
+  short_description: "按项目规范与需求分别审查最终改动和证据，返回可核实发现"
+policy:
+  allow_implicit_invocation: false

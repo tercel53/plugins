@@ -1,0 +1,5 @@
+interface:
+  display_name: "pstack 回归验证"
+  short_description: "通过现有测试入口建立行为反例并核验修复，保留真实运行证据"
+policy:
+  allow_implicit_invocation: false

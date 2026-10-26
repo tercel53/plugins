@@ -30,3 +30,8 @@ jobs:
 
       - name: Check generated pstack harness trees
         run: node scripts/generate-pstack-harness-trees.mjs --check
+
+      - name: Check Codex pstack bundle and installation
+        run: |
+          node scripts/build-pstack-codex.mjs --check
+          node --test scripts/pstack-codex.test.mjs

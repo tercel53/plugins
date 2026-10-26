@@ -1,0 +1,5 @@
+interface:
+  display_name: "pstack 工作流"
+  short_description: "在 Codex 中完成理解、设计、实现、验证、独立审查与返修交付"
+policy:
+  allow_implicit_invocation: false

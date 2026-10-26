@@ -23,6 +23,8 @@ This folder is generated from \`pstack/skills\`, \`pstack/agents\`, \`pstack/${G
 Cursor uses \`pstack/\` directly, and Claude Code installs \`${TREE}/\`. The tree leaves out the rest of \`pstack/\`, such as \`pstack/automations\` and \`pstack/assets\`. A relative link to a pstack file that the tree leaves out points at that file on GitHub \`main\` instead.
 
 After editing those sources, run \`${COMMAND}\` from the repository root and commit the result.
+
+Codex uses the separate \`codex/\` tree. Its three entry skills and adapter are maintained there; \`node scripts/build-pstack-codex.mjs\` generates its upstream method snapshot. See \`codex/README.md\` for project installation.
 `;
 
 const TERMS = [
@@ -165,7 +167,7 @@ for (const link of dangling) console.log(`FAIL ${link}`);
 if (dangling.length > 0) process.exit(1);
 
 if (process.argv.includes("--check")) {
-  const onDisk = new Map(existsSync(OUT) ? walk(OUT).map((path) => [relative(OUT, path), file(path)]) : []);
+  const onDisk = new Map(existsSync(OUT) ? walk(OUT).filter((path) => !relative(OUT, path).startsWith("codex/")).map((path) => [relative(OUT, path), file(path)]) : []);
   const drifted = [...new Set([...rendered.keys(), ...onDisk.keys()])].sort().filter((path) => {
     const [want, have] = [rendered.get(path), onDisk.get(path)];
     return !want || !have || !want.bytes.equals(have.bytes) || want.executable !== have.executable;
@@ -177,7 +179,8 @@ if (process.argv.includes("--check")) {
   }
   console.log("harness/pstack is up to date.");
 } else {
-  rmSync(OUT, { recursive: true, force: true });
+  // Codex owns its sibling tree; regenerating Claude Code must preserve it.
+  rmSync(join(OUT, TREE), { recursive: true, force: true });
   for (const [path, { bytes, executable }] of rendered) {
     mkdirSync(dirname(join(OUT, path)), { recursive: true });
     writeFileSync(join(OUT, path), bytes);
